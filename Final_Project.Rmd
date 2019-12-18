@@ -1,0 +1,278 @@
+---
+title: "Project 4"
+author: "Grant Buttrey"
+date: "12/2/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+1. Describe your dataset. Give the source of the dataset and a metadata listing for each variable.
+In other words, list the names of the variables, types, and brief descriptions of values if needed.
+This answer is just text – no code needed. Use a list format; no paragraphs.
+
+Source: https://www.kaggle.com/rajeevw/ufcdata/data
+
+R_fighter: Factor and Red corne fighter
+B_fighter: Factor and Blue corner 
+title_bout: Factor and tells if the fight is a title fight or not. 
+B_avg_BODY_landed: double and tells the average number of body shots landed by the fighter in the blue corner.
+R_avg_BODY_landed: double and tells the average number of body shots landed by the fighter in the red corner.
+B_avg_BODY_att: double and tells the average number of body shots attempted by the fighter in the blue corner.
+R_avg_BODY_att: double and tells the average number of body shots attempted by the fighter in the red corner.
+B_avg_CLINCH_landed: double and tells the average number of significant strikes landed in the clinch by the fighter in the blue corner.
+R_avg_CLINCH_landed: double and tells the average number of significant strikes landed in the clinch by the fighter in the red corner.
+B_avg_CLINCH_att: double and tells the average number of strikes attempted in the clinch by the fighter in the blue corner. 
+R_avg_CLINCH_att: double and tells the average number of strikes attempted in the clinch by the fighter in the red corner.
+B_avg_GROUND_landed: double and tells the average number of strikes landed on the ground by the fighter in the blue corner. 
+R_avg_GROUND_landed: double and tells the average number of strikes landed on the ground by the fighter in the red corner.
+B_avg_GROUND_att: double and tells the average number of strikes were attempted on the ground by the fighter in the blue corner. 
+R_avg_GROUND_att: double and tells the average number of strikes were attempted on the ground by the fighter in the red corner. 
+B_avg_REV: double and average number of times there was no reversals landed by the fighter in the blue corner.  
+R_avg_REV: double and average number of times there was no reversals landed by the fighter in the red corner.
+B_avg_SIG_STR_att: double and tells the number of significant strikes attempted by the fighter in the blue corner. 
+R_avg_SIG_STR_att: double and tells the number of significant strikes attempted by the fighter in the red corner.
+B_avg_SIG_STR_landed: double and tells the number of significant strikes landed by the fighter in the blue corner. 
+R_avg_SIG_STR_landed: double and tells the number of significant strikes landed by the fighter in the red corner.
+B_avg_SUB_ATT: double and tells the average number of submissions attempted by the fighter in the blue corner. 
+R_avg_SUB_ATT: double and tells the average number of submissions attempted by the fighter in the red corner.
+B_avg_TD_att: double and tells the average number of takedowns attempted by the fighter in the blue corner. 
+R_avg_TD_att: double and tells the average number of takedowns attempted by the fighter in the red corner.
+B_avg_TOTAL_STR_att: double and tells the average number of strikes attempted by the fighter in the blue corner. 
+R_avg_TOTAL_STR_att: double and tells the average number of strikes attempted by the fighter in the red corner.
+B_avg_TOTAL_STR_landed: double and tells the number of strikes landed by the fighter in the blue corner. 
+R_avg_TOTAL_STR_landed: double and tells the number of strikes landed by the fighter in the red corner.
+win_by_Decision_Majority: double and tells the number of wins by majority judges decision in the fighter's ufc career. 
+win_by_Decision_Split: double and tells the number of wins by split judges decision in the fighter's ufc career.
+win_by_Decision_Unanimous: double and tells the number of wins by unanimous judges decision in the fighter's ufc career.
+win_by_KO.TKO: double and tells the number of wins by knockout in the fighter's ufc career.
+win_by_Submission: double and tells the number of wins by submission in the fighter's ufc career.
+win_by_TKO_Doctor_Stoppage: double and tells the number of wins by doctor stoppage in the fighter's ufc career.
+wins: double and tells the number of wins in the fighter's ufc career. 
+stance: factor and tells the stance of the fighter (orthodox, southpaw, etc.).
+Height_cms: double and tells the fighters hieght in centimeters.
+reach: double and tells the reach of the fighters arms in centimeters. 
+
+
+2. Read in your dataset and calculate:
+```{r}
+library(tidyverse)
+UFC_History <- read.csv("data.csv")
+```
+a. the number of missing values in your dataset
+```{r}
+sum(is.na(UFC_History))
+```
+
+b. the percentage of missing values in your dataset.
+```{r}
+sum(is.na(UFC_History))/(nrow(UFC_History)*ncol(UFC_History))*100
+```
+
+If your dataset has missing values:
+a. Check that R recognizes the missing values as NA.
+My data set recognizes all values as NA already.
+
+b. Convert any missing values that are not read in as NA (for example ‘ ‘, ‘n/a’, etc.) to NA.
+
+All missing values already read in as NA!
+
+3. Give TWO questions about your dataset that you are going to investigate. Your questions
+should address variation only. This answer is just text – no code needed.
+Good examples of questions to ask are in the EDA Investigation Goals and Questions slides on
+our course Blackboard page. 
+
+a. The average reach of fighters is 182cm. Do fighters with a reach greater than the average have more career wins than fighters with reach less than the average? 
+
+b. Is there a correlation between the fighters weight and the number of rounds the fights lasted? 
+
+4. Perform EDA to answer your research questions. Your EDA should:
+• Use dplyr
+• Use at least two of the following depending on your questions of interest: geom_histogram,
+geom_bar, geom_boxplot, geom_point, geom_tile
+• A research question may need more than one dplyr command and/or one visualization to
+answer it. For example, if a research question leads to another related question, you will
+need more than one dplyr command/visualization to answer the original and related
+question.
+
+a. 
+```{r}
+head(UFC_History,5)%>%
+  select(R_Reach_cms, R_wins)%>%
+  filter(R_Reach_cms > 182)
+
+head(UFC_History,5)%>%
+  select(R_Reach_cms, R_wins)%>%
+  filter(R_Reach_cms < 182)
+
+head(UFC_History,5)%>%
+  select(B_Reach_cms, B_wins)%>%
+  filter(B_Reach_cms > 182)
+
+head(UFC_History,5)%>%
+  select(B_Reach_cms, B_wins)%>%
+  filter(B_Reach_cms < 182)
+
+boxplot(UFC_History$B_wins~as.factor(UFC_History$B_Reach_cms))
+
+boxplot(UFC_History$R_wins~as.factor(UFC_History$R_Reach_cms))
+```
+
+
+b. 
+```{r}
+head(UFC_History,5)%>%
+  select(R_total_rounds_fought, R_Weight_lbs)
+
+head(UFC_History,5)%>%
+  select(B_total_rounds_fought, B_Weight_lbs)
+
+ggplot(UFC_History, aes(B_Weight_lbs)) +
+  geom_histogram(binwidth = 25)+
+  xlim(100,400)
+  
+ggplot(data = UFC_History, mapping = aes(x =R_Weight_lbs, y = R_total_rounds_fought)) + 
+  geom_boxplot()+
+  ylim(0,40)+
+  coord_flip()
+  
+boxplot(UFC_History$R_Weight_lbs~as.factor(UFC_History$R_total_rounds_fought))
+
+boxplot(UFC_History$B_Weight_lbs~as.factor(UFC_History$B_total_rounds_fought))
+
+ggplot(data = UFC_History, mapping = aes(x = R_Weight_lbs, y = B_win_by_KO.TKO)) +
+  geom_point() +
+  coord_flip()
+```
+
+5. Write a two paragraph summary about what your EDA is telling you about your data. This
+answer is just text – no code needed.
+
+
+If you look at the deplyer functions it shows the amount of wins with those with a reach greater than 182cm and less than 182cm for both fighters in the red and blue corners. What it ends up showing is that if you combine the number of wins from those in each corner the group with a reach longer than the average has 41 total career wins, whereas the group with a reach less than the average has 31 total career wins. This shows that those with a longer than average reach have more career fights. if you are looking at the group as a total. Now if you look at the box plot I have provided, it shows that those with a longer reach have a slightly greater average number of wins than those with a shorter reach. But looking at both graphs its hard to see much of a difference. Most fighters, no matter what their reach, tend to have about an average number of wins somewhere under 5. 
+
+Now if you take a look a the boxplot I provided for the questions "Is there a correlation between the fighters weight and the number of rounds the fights lasted?" you'll notice a trend. The trend is that as the rounds become higher, the number of fighters above the average weight begin to fall off. Meaning that those who are not around the mean weight by about plus or minus 50 pounds then they struggle to last as long in a fight. Another conclusion that might be drawn from this is those who are greater than the average weight might have more knockout power, meaning fights end early due to more knockouts. I did a little digging into that theory as well. As it turns out those fighters who were heavier and didn't last as long in the fights had more knockouts than those who didn't weigh as much. 
+
+
+6. Give a third question about your dataset that you want to investigate using a two-sample t-test.
+(This is a test for the difference of means between two groups.) You can use a paired test or
+independent samples test. Use a categorical variable to create the two samples and then use a
+quantitative variable to take the mean of.
+• Create a visualization that shows the distribution of the two samples. (Your visualization
+should support your statistical analysis results.)
+• Briefly discuss the two-sample t-test assumptions and why your dataset meets these
+assumptions.
+• Write out 𝐻𝐻𝑜𝑜 and 𝐻𝐻𝑎𝑎.
+• Use R to perform the t-test and find the confidence interval.
+• Report on the p-value and if you choose to reject 𝐻𝐻𝑜𝑜 or fail to reject 𝐻𝐻𝑜𝑜.
+• Write a real-world conclusion for the results of the hypothesis test.
+• Write a real-world conclusion for the results of the confidence interval.
+
+Question: Do those with an orthodox stance in the blue corner win by knockout more than those who fight in a southpaw stance? 
+
+Ho: those with an orthodox stance in the blue corner wins by knockout = those with a southpaw stance in the blue corner wins by knockout
+Ha: those with an orthodox stance in the blue corner wins by knockout < those with a southpaw stance in the blue corner wins by knockout
+
+```{r}
+ggplot(data = UFC_History, mapping = aes(x = B_Stance, y = B_win_by_KO.TKO)) + 
+  geom_boxplot()
+
+ggplot(data = UFC_History) + 
+  geom_violin(mapping = aes(x = B_Stance, y = B_win_by_KO.TKO))
+
+orthodox <- UFC_History %>%
+  filter(B_Stance == "Orthodox")
+
+mean(orthodox$B_win_by_KO.TKO)
+
+southpaw <- UFC_History %>% 
+  filter(B_Stance == "Southpaw")
+
+mean(southpaw$B_win_by_KO.TKO)
+
+t.test(orthodox$B_win_by_KO.TKO, southpaw$B_win_by_KO.TKO, alternative = "less", conf.level = .95)
+
+```
+
+
+The p-value was 0.01258 which was less than alpha = .05. Given this information I reject Ho. We have enough evidence to reject Ho and prove that those who fight in a southpaw stance win by knockout more than those who fight in an orthodox stance. Given a confidence interval of 95% we can reject Ho and prove that those who fight in a southpaw stance win by knockout more than those who fight in an orthodox stance. The difference between my two variables is somewhere between negative infinity and -0.035. The test meets the assumptions because a random sample of n was taken, the variables were normally distributed, and the same size was much larger than 30. 
+
+
+7. Give a fourth question about your dataset that you can investigate using a Chi-Square test.
+• Create a visualization that shows the distribution of the contingency table. (Your
+visualization should support your statistical analysis results.)
+• Briefly discuss the test assumptions and why your dataset meets these assumptions.
+• Write out 𝐻𝐻𝑜𝑜 and 𝐻𝐻𝑎𝑎.
+• Use R to perform the hypothesis test.
+• Report on the p-value and if you choose to reject 𝐻𝐻𝑜𝑜 or fail to reject 𝐻𝐻𝑜𝑜.
+• Write a real-world conclusion for the results of the hypothesis test.
+
+Is there a relationship between the location of the fight and whether or not the fight is a title bout?
+
+Ho: Location and title bout fight are independent.
+Ha: Location and title bout fight are dependent.  
+
+```{r}
+location_title_bout <- table(UFC_History$location, 
+                            UFC_History$title_bout)
+
+result <- chisq.test(location_title_bout)
+result
+
+ggplot(data = UFC_History) +
+  geom_bar(mapping=aes(x=location,
+                       fill=title_bout)) +
+  scale_fill_brewer(palette="Set1")+
+  coord_flip()
+
+result$expected
+```
+The location that has the most title bout fights was Las Vegas in this visual. You can also see this in the  expected results where is shows Las Vegas having the highest numbers, followed in a not close second by London. 
+
+The p-value given by the chi-squared test was 8.468e-09. Which is a very small p-value, which tells me that there is enough evidence to reject Ho and prove that there is a relationship between the location of the fight and if the fight is a title bout fight. 
+
+8. Give a fifth question about your dataset that involves the covariation of two quantitative
+variables.
+• Create a scatter plot for the two variables and add a line of best fit using geom_smooth.
+• Find the linear regression coefficients and print out the results of the hypothesis test.
+• Write out the linear model for your variables.
+• Discuss the p-values for each variable and the overall test, and if your model is
+statistically significant.
+• Discuss the 𝑟𝑟2 value for your model and what it means with respect to your model. Also
+discuss the relationship of your two variables – what kind of correlation do they have?
+(positive/negative, strong/weak)
+
+Is there a relationship between the average number of shots landed on an opponents head and a win by TKO/KO?
+
+Ho: Number of shots landed on an opponents head and win by TKO/KO are dependent.
+Ha: Number of shots landed on an opponents head and win by TKO/KO are independent.
+```{r}
+ggplot(data=UFC_History, mapping=aes(B_avg_HEAD_landed, B_win_by_KO.TKO)) +
+  geom_point() +
+  geom_smooth(method='lm')
+
+lin_model <- lm(UFC_History$B_avg_HEAD_landed ~ UFC_History$B_win_by_KO.TKO)
+lin_model
+
+summary(lin_model)
+
+res <- residuals(lin_model)
+head(res)
+
+TKO_wins_idx <- complete.cases(UFC_History[,c('B_avg_HEAD_landed','B_win_by_KO.TKO')])
+TKO_complete <- UFC_History$B_win_by_KO.TKO[TKO_wins_idx]
+
+plot(TKO_complete,res, ylab = 'residual', xlab = 'TKO')%>%
+abline(0,0) 
+```
+
+The p-value is 0.003712 and there is enough evidence to prove that there was no relationship between the two variables, they are independent of each other. Because the p-value was so small the model was statistically significant. I know this because R squared is 0.00217. Meaning that there is a 0.22% chance that a TKO or KO will occur in a fight due to a certain number of head shots landed by the fighter. The other 99.8% chance of a TKO or KO will occur due to other variables. Another reason I know there was no relationship between the two variables is because the risidual plot shows a linear pattern, whereas the plot trying to show a correlation between the two variables does not show any correlation. 
+
+
+9. Write a two-paragraph summary of any ethical concerns about your dataset and/or project.
+
+When looking at this particular dataset I don't believe there are a lot of ethical issues you could run into because a lot of this is common sports statistics that are reported on all the time. One of the only ethical concerns I can think of is if you were to take the data use for men and women and start to compare the two sexes. If a company full of men were to do something like that they could run into a lot of problems because they will not have differing perspectives from women. I think that if someone were to want to compare the two genders statistics they should tread lightly because it could outrage a large group of people if it is interpreted or shown in a poor way.
+
+Another data ethics problem I can think of is to make sure that the people handling the data fully understand the sport and are getting the whole story when it comes to statistics. One reason I'm saying this is because if someone does not understand the sport they might display the data in a poor manner. Also, statistics do not always tell the full story when it comes to sports. That's why getting the whole story can be very important because it could explain a certain piece of data that might stand out. 
+
